@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="viking" default="complete">
+  <target name="help">
+    <local name="readme"/>
+    <loadfile property="readme" srcFile="README.md"/>
+    <echo message="${readme}"/>
+    <echo>
+      This build.xml file is largely unimportant, it exists for the
+      purpose of building, bootstrapping and testing Viking itself.
+    </echo>
+  </target>
+
+  <target name="complete">
+    <echo message="Viking is work in progress"/>
+  </target>
+
+</project>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="viking">
+
+  <extension-point name="-pre-setup" depends="-commons bootstrap"/>
+
+  <target name="setup" depends="-pre-setup">
+    <!-- Define properties required by Viking build, unless already defined -->
+
+    <property name="compilation.target" value="1.5"/>
+    <!-- project information -->
+    <property name="project.group" value="${ant.project.name}"/>
+    <property name="project.name" value="${ant.project.name}"/>
+    <property name="project.version" value="SNAPSHOT"/>
+    <!-- source directories -->
+    <property name="source.main.java" value="src/main/java" />
+    <property name="generated.main.java" value="target/generated-sources/java" />
+    <property name="source.test.java" value="src/test/java" />
+    <property name="generated.test.java" value="target/generated-test-sources/java" />
+    <!-- target directories -->
+    <property name="target.dir" location="target"/>
+    <property name="test.reports" location="${target.dir}/test-reports"/>
+    <property name="main.target.tmpdir" location="${target.dir}/classes"/>
+    <property name="test.target.tmpdir" location="${target.dir}/test-classes"/>
+    <!-- artifacts -->
+    <property name="main.jar.name"
+              value="${project.name}-${project.version}.jar"/>
+    <property name="test.jar.name"
+              value="${project.name}-${project.version}-test.jar"/>
+    <property name="main.src.jar.name"
+              value="${project.name}-${project.version}-sources.jar"/>
+    <property name="test.src.jar.name"
+              value="${project.name}-${project.version}-test-sources.jar"/>
+    <property name="main.jar" location="${target.dir}/${main.jar.name}"/>
+    <property name="test.jar" location="${target.dir}/${test.jar.name}"/>
+    <property name="main.src.jar"
+              location="${target.dir}/${main.src.jar.name}"/>
+    <property name="test.src.jar"
+              location="${target.dir}/${test.src.jar.name}"/>
+    <!-- create target directories -->
+    <mkdir dir="${target.dir}"/>
+    <!-- define classpaths -->
+    <path id="main.classpath"/>
+    <path id="runtime.classpath"><path refid="main.classpath"/></path>
+    <path id="test.classpath"/>
+    <path id="test.runtime.classpath">
+      <path refid="test.classpath"/>
+      <path refid="runtime.classpath"/>
+    </path>
+  </target>
+
+  <extension-point name="-post-setup" depends="setup"/>
+
+  <target name="clean" depends="-post-setup">
+    <delete includeemptydirs="true"><!-- clean submodules (if any) -->
+      <fileset dir="${basedir}" includes="*/target/**"/>
+    </delete>
+    <delete dir="${target.dir}"/>
+  </target>
+
+  <extension-point name="-pre-build" depends="-post-setup"/>
+
+  <target name="build" depends="-pre-build"/>
+
+  <extension-point name="-pre-build-test" depends="build"/>
+
+  <target name="build-test" depends="build,-pre-build-test"/>
+
+  <extension-point name="-pre-test" depends="build-test"/>
+
+  <target name="test" depends="-pre-test"/>
+
+  <extension-point name="-post-test" depends="test"/>
+
+  <extension-point name="complete" depends="-post-test"/>
+
+</project>
